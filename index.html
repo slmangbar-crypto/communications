@@ -1,113 +1,340 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl" class="h-full">
+<html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>منصة بلاغات المنشآت الوطنية | النظام الرقمي لمتابعة البلاغات</title>
-  
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- FontAwesome 6 Pro/Free Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-  <!-- Google Font: Tajawal & Cairo -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
-
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['Tajawal', 'sans-serif'],
-          },
-          colors: {
-            brand: {
-              50: '#f0f7ff',
-              100: '#e0effe',
-              500: '#0284c7',
-              700: '#0369a1',
-              900: '#0c4a6e',
-            },
-            accent: {
-              500: '#d97706',
-              600: '#b45309',
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة بلاغات المنشآت</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts - Cairo -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        cairo: ['Cairo', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#1e3a8a',
+                        secondary: '#d97706',
+                    }
+                }
             }
-          }
         }
-      }
-    }
-  </script>
-  <style>
-    body { font-family: 'Tajawal', sans-serif; }
-    /* Custom Scrollbar */
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-    .dark ::-webkit-scrollbar-thumb { background: #334155; }
-  </style>
+    </script>
 </head>
+<body class="font-cairo bg-slate-50 text-slate-800 min-h-screen flex flex-col">
 
-<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 min-h-screen flex flex-col transition-colors duration-300">
-
-  <!-- Header / Navigation Bar -->
-  <header class="bg-slate-900 text-white sticky top-0 z-40 shadow-lg border-b border-slate-800">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex items-center justify-between h-20">
-        
-        <!-- Logo & Branding -->
-        <div class="flex items-center gap-4">
-          <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-amber-500 to-amber-300 flex items-center justify-center text-slate-900 shadow-md">
-            <i class="fa-solid fa-building-shield text-2xl"></i>
-          </div>
-          <div>
-            <div class="flex items-center gap-2">
-              <h1 class="text-xl font-black tracking-wide text-white">منصة بلاغات المنشآت</h1>
-              <span class="bg-amber-500/20 text-amber-400 text-xs px-2 py-0.5 rounded-full border border-amber-500/30 font-bold">المملكة العربية السعودية</span>
+    <!-- Navbar -->
+    <header class="bg-primary text-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="bg-secondary p-2 rounded-xl text-white shadow">
+                    <i class="fa-solid fa-shield-halved text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold tracking-wide">منصة بلاغات المنشآت</h1>
+                    <p class="text-xs text-slate-300">نظام تلقي ومتابعة البلاغات الرقمي</p>
+                </div>
             </div>
-            <p class="text-xs text-slate-400 mt-0.5">النظام الوطني الموحد لرصد ومتابعة مخالفات المنشآت التجارية</p>
-          </div>
+            <div class="flex items-center gap-3">
+                <button onclick="openNewReportModal()" class="bg-secondary hover:bg-amber-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition flex items-center gap-2 shadow">
+                    <i class="fa-solid fa-plus"></i>
+                    <span>بلاغ جديد</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="container mx-auto px-4 py-6 flex-grow">
+        
+        <!-- Statistics Section -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-100 flex items-center justify-between">
+                <div>
+                    <p class="text-xs text-slate-500 font-medium">إجمالي البلاغات</p>
+                    <h3 id="totalReports" class="text-2xl font-bold text-slate-800 mt-1">0</h3>
+                </div>
+                <div class="w-12 h-12 bg-blue-50 text-primary rounded-xl flex items-center justify-center text-xl">
+                    <i class="fa-solid fa-folder-open"></i>
+                </div>
+            </div>
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-100 flex items-center justify-between">
+                <div>
+                    <p class="text-xs text-slate-500 font-medium">بلاغات قيد المعالجة</p>
+                    <h3 id="pendingReports" class="text-2xl font-bold text-amber-600 mt-1">0</h3>
+                </div>
+                <div class="w-12 h-12 bg-amber-50 text-amber-600 rounded-xl flex items-center justify-center text-xl">
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+                </div>
+            </div>
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-100 flex items-center justify-between">
+                <div>
+                    <p class="text-xs text-slate-500 font-medium">بلاغات مكتملة</p>
+                    <h3 id="resolvedReports" class="text-2xl font-bold text-emerald-600 mt-1">0</h3>
+                </div>
+                <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center text-xl">
+                    <i class="fa-solid fa-circle-check"></i>
+                </div>
+            </div>
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-100 flex items-center justify-between">
+                <div>
+                    <p class="text-xs text-slate-500 font-medium">حالة النظام</p>
+                    <h3 class="text-lg font-bold text-emerald-600 mt-1 flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                        متصل
+                    </h3>
+                </div>
+                <div class="w-12 h-12 bg-slate-100 text-slate-600 rounded-xl flex items-center justify-center text-xl">
+                    <i class="fa-solid fa-server"></i>
+                </div>
+            </div>
         </div>
 
-        <!-- Right Side Actions -->
-        <div class="flex items-center gap-3">
-          <!-- Dark Mode Toggle -->
-          <button onclick="toggleTheme()" class="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition">
-            <i id="themeIcon" class="fa-solid fa-moon text-lg"></i>
-          </button>
-
-          <!-- New Report Trigger -->
-          <button onclick="openWizardModal()" class="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-bold px-5 py-2.5 rounded-xl shadow-lg hover:shadow-amber-500/20 transition flex items-center gap-2">
-            <i class="fa-solid fa-circle-plus text-lg"></i>
-            <span>تقديم بلاغ جديد</span>
-          </button>
+        <!-- Controls / Search and Filter -->
+        <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-100 mb-6 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="w-full md:w-96 relative">
+                <span class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-slate-400">
+                    <i class="fa-solid fa-search"></i>
+                </span>
+                <input type="text" id="searchInput" oninput="filterReports()" placeholder="البحث برقم البلاغ أو اسم المنشأة..." class="w-full pr-10 pl-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-primary transition">
+            </div>
+            <div class="flex items-center gap-3 w-full md:w-auto justify-end">
+                <select id="statusFilter" onchange="filterReports()" class="py-2 px-3 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-primary transition">
+                    <option value="">جميع الحالات</option>
+                    <option value="قيد المعالجة">قيد المعالجة</option>
+                    <option value="مكتملة">مكتملة</option>
+                    <option value="مرفوضة">مرفوضة</option>
+                </select>
+                <button onclick="exportToCSV()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-2 rounded-lg text-sm font-medium transition flex items-center gap-2">
+                    <i class="fa-solid fa-download"></i>
+                    <span>تصدير</span>
+                </button>
+            </div>
         </div>
 
-      </div>
+        <!-- Reports Table -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-right border-collapse">
+                    <thead>
+                        <tr class="bg-slate-100 text-slate-700 text-xs font-bold uppercase tracking-wider border-b border-slate-200">
+                            <th class="py-3 px-4">رقم البلاغ</th>
+                            <th class="py-3 px-4">اسم المنشأة</th>
+                            <th class="py-3 px-4">نوع المخالفة</th>
+                            <th class="py-3 px-4">المدينة / الموقع</th>
+                            <th class="py-3 px-4">الحالة</th>
+                            <th class="py-3 px-4">التاريخ</th>
+                            <th class="py-3 px-4 text-center">الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reportsTableBody" class="divide-y divide-slate-100 text-sm">
+                        <!-- Dynamic Content injected via JS -->
+                    </tbody>
+                </table>
+            </div>
+            <!-- Empty State -->
+            <div id="emptyState" class="hidden text-center py-12">
+                <div class="text-slate-300 text-5xl mb-3">
+                    <i class="fa-solid fa-folder-open"></i>
+                </div>
+                <p class="text-slate-500 font-medium">لا توجد بلاغات مسجلة حتى الآن</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal: New Report -->
+    <div id="reportModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-lg rounded-2xl shadow-xl overflow-hidden transform transition-all">
+            <div class="bg-primary px-6 py-4 text-white flex justify-between items-center">
+                <h3 class="font-bold text-lg flex items-center gap-2">
+                    <i class="fa-solid fa-file-circle-plus"></i>
+                    تقديم بلاغ جديد للمنشأة
+                </h3>
+                <button onclick="closeNewReportModal()" class="text-white/80 hover:text-white transition">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+            <form id="reportForm" onsubmit="handleFormSubmit(event)" class="p-6 space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">اسم المنشأة</label>
+                    <input type="text" id="estabName" required placeholder="أدخل اسم المنشأة التجارية" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-primary">
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">نوع المخالفة / البلاغ</label>
+                        <select id="violationType" required class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-primary">
+                            <option value="">اختر التصنيف</option>
+                            <option value="مخالفة اشتراطات">مخالفة اشتراطات</option>
+                            <option value="تستر تجاري">تستر تجاري</option>
+                            <option value="منتجات منتهية الصلاحية">منتجات منتهية الصلاحية</option>
+                            <option value="عدم إصدار فواتير">عدم إصدار فواتير</option>
+                            <option value="أخرى">أخرى</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">المدينة / المنطقة</label>
+                        <input type="text" id="city" required placeholder="مثال: جدة، الرياض" class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-primary">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">تفاصيل البلاغ</label>
+                    <textarea id="reportDetails" rows="3" required placeholder="اكتب تفاصيل البلاغ بوضوح..." class="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-primary"></textarea>
+                </div>
+                <div class="flex justify-end gap-3 pt-2">
+                    <button type="button" onclick="closeNewReportModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-sm font-medium transition">إلغاء</button>
+                    <button type="submit" class="px-5 py-2 bg-secondary hover:bg-amber-700 text-white rounded-lg text-sm font-semibold transition shadow">حفظ وتقديم البلاغ</button>
+                </div>
+            </form>
+        </div>
     </div>
-  </header>
 
-  <!-- Main Content Area -->
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full">
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-4 text-center text-xs text-slate-500 mt-auto">
+        <p>جميع الحقوق محفوظة © منصة بلاغات المنشآت 2026</p>
+    </footer>
 
-    <!-- Hero / Metrics Dashboard -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
-      
-      <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-sm border border-slate-200/80 dark:border-slate-700/60 relative overflow-hidden">
-        <div class="flex items-center justify-between">
-          <div>
-            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">إجمالي البلاغات المسجلة</p>
-            <h3 id="statTotal" class="text-3xl font-black text-slate-900 dark:text-white mt-2">0</h3>
-          </div>
-          <div class="w-14 h-14 rounded-2xl bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 flex items-center justify-center text-2xl">
-            <i class="fa-solid fa-folder-open"></i>
-          </div>
-        </div>
-        <div class="mt-4 flex items-center text-xs text-emerald-600 dark:text-emerald-400 font-semibold gap-1">
-          <i class="fa-solid fa-arrow-trend-up"></i>
-          <span>تحديث فوري للقاعدة</span>
-        </div>
-      </div>
+    <!-- JavaScript Application Logic -->
+    <script>
+        // Initial Mock Data or LocalStorage
+        let reports = JSON.parse(localStorage.getItem('estab_reports')) || [
+            { id: 'REP-9021', name: 'أسواق التوفير الحديثة', type: 'مخالفة اشتراطات', city: 'جدة', status: 'قيد المعالجة', date: '2026-10-25', details: 'وجود تلف في بعض الأغذية المعروضة.' },
+            { id: 'REP-8432', name: 'مؤسسة النور للمقاولات', type: 'تستر تجاري', city: 'الرياض', status: 'مكتملة', date: '2026-10-24', details: 'تشغيل عمالة مخالفة لأنظمة الإقامة.' }
+        ];
 
-      <div
+        function initApp() {
+            renderReports(reports);
+            updateStats();
+        }
+
+        function renderReports(data) {
+            const tbody = document.getElementById('reportsTableBody');
+            const emptyState = document.getElementById('emptyState');
+            tbody.innerHTML = '';
+
+            if (data.length === 0) {
+                emptyState.classList.remove('hidden');
+                return;
+            } else {
+                emptyState.classList.add('hidden');
+            }
+
+            data.forEach((rep, index) => {
+                let statusBadge = '';
+                if(rep.status === 'مكتملة') {
+                    statusBadge = `<span class="bg-emerald-50 text-emerald-600 border border-emerald-200 px-2.5 py-1 rounded-full text-xs font-semibold">مكتملة</span>`;
+                } else if(rep.status === 'قيد المعالجة') {
+                    statusBadge = `<span class="bg-amber-50 text-amber-600 border border-amber-200 px-2.5 py-1 rounded-full text-xs font-semibold">قيد المعالجة</span>`;
+                } else {
+                    statusBadge = `<span class="bg-rose-50 text-rose-600 border border-rose-200 px-2.5 py-1 rounded-full text-xs font-semibold">مرفوضة</span>`;
+                }
+
+                tbody.innerHTML += `
+                    <tr class="hover:bg-slate-50/80 transition border-b border-slate-100">
+                        <td class="py-3 px-4 font-bold text-primary text-xs">${rep.id}</td>
+                        <td class="py-3 px-4 font-semibold text-slate-700">${rep.name}</td>
+                        <td class="py-3 px-4 text-slate-600">${rep.type}</td>
+                        <td class="py-3 px-4 text-slate-600">${rep.city}</td>
+                        <td class="py-3 px-4">${statusBadge}</td>
+                        <td class="py-3 px-4 text-slate-500 text-xs">${rep.date}</td>
+                        <td class="py-3 px-4 text-center">
+                            <button onclick="toggleStatus('${rep.id}')" title="تغيير الحالة" class="p-1.5 bg-slate-100 hover:bg-primary hover:text-white rounded-lg text-slate-600 transition ml-1">
+                                <i class="fa-solid fa-rotate"></i>
+                            </button>
+                            <button onclick="deleteReport('${rep.id}')" title="حذف" class="p-1.5 bg-slate-100 hover:bg-rose-600 hover:text-white rounded-lg text-slate-600 transition">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function updateStats() {
+            document.getElementById('totalReports').innerText = reports.length;
+            document.getElementById('pendingReports').innerText = reports.filter(r => r.status === 'قيد المعالجة').length;
+            document.getElementById('resolvedReports').innerText = reports.filter(r => r.status === 'مكتملة').length;
+            localStorage.setItem('estab_reports', JSON.stringify(reports));
+        }
+
+        function openNewReportModal() {
+            document.getElementById('reportModal').classList.remove('hidden');
+        }
+
+        function closeNewReportModal() {
+            document.getElementById('reportModal').classList.add('hidden');
+            document.getElementById('reportForm').reset();
+        }
+
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            const newRep = {
+                id: 'REP-' + Math.floor(1000 + Math.random() * 9000),
+                name: document.getElementById('estabName').value,
+                type: document.getElementById('violationType').value,
+                city: document.getElementById('city').value,
+                status: 'قيد المعالجة',
+                date: new Date().toISOString().split('T')[0],
+                details: document.getElementById('reportDetails').value
+            };
+
+            reports.unshift(newRep);
+            renderReports(reports);
+            updateStats();
+            closeNewReportModal();
+        }
+
+        function toggleStatus(id) {
+            const rep = reports.find(r => r.id === id);
+            if(rep) {
+                if(rep.status === 'قيد المعالجة') rep.status = 'مكتملة';
+                else if(rep.status === 'مكتملة') rep.status = 'مرفوضة';
+                else rep.status = 'قيد المعالجة';
+                renderReports(reports);
+                updateStats();
+            }
+        }
+
+        function deleteReport(id) {
+            if(confirm('هل أنت متأكد من حذف هذا البلاغ؟')) {
+                reports = reports.filter(r => r.id !== id);
+                renderReports(reports);
+                updateStats();
+            }
+        }
+
+        function filterReports() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const status = document.getElementById('statusFilter').value;
+
+            const filtered = reports.filter(r => {
+                const matchesQuery = r.name.toLowerCase().includes(query) || r.id.toLowerCase().includes(query);
+                const matchesStatus = status === '' || r.status === status;
+                return matchesQuery && matchesStatus;
+            });
+
+            renderReports(filtered);
+        }
+
+        function exportToCSV() {
+            let csv = 'ID,Name,Type,City,Status,Date\n';
+            reports.forEach(r => {
+                csv += `${r.id},"${r.name}","${r.type}",${r.city},${r.status},${r.date}\n`;
+            });
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'reports_data.csv';
+            a.click();
+        }
+
+        // Initialize on load
+        window.onload = initApp;
+    </script>
+</body>
+</html>
